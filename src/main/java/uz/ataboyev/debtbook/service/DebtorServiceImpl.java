@@ -43,9 +43,28 @@ public class DebtorServiceImpl implements DebtorService{
     }
 
     @Override
+    public ApiResult<?> edit(Long id, DebtorDto debtorDto) {
+        //ID BO'YICHA QARZDOR BAZADAN OLIB KELINADI
+        Debtor debtor = getDebtorByIdElseThrow(id);
+
+        //QARZDOR PARAMETRLARI DTODAGI MA'LUMOTLAR ORQALI O'ZGARTIRILADI
+        debtorMapper.updateDebtor(debtor,debtorDto);
+
+        return ApiResult.successResponse("SUCCESS EDITED DEBTOR");
+    }
+
+    @Override
+    public ApiResult<?> delete(Long id) {
+        return null;
+    }
+
+    @Override
     public ApiResult<DebtorResDto> getOne(Long id) {
         Debtor debtor = debtorRepository.findById(id).orElseThrow(() -> new RestException("Bu qarzdor topilmadi", HttpStatus.NOT_FOUND));
         //debtorni umumiy qarzini olib kelish kerak
+
+        DebtorResDto debtorResDto = debtorMapper.debtorToResDto(debtor);
+
 
 
         return null;
@@ -56,13 +75,11 @@ public class DebtorServiceImpl implements DebtorService{
         return null;
     }
 
-    @Override
-    public ApiResult<?> edit(Long id, DebtorDto debtorDto, User user) {
-        return null;
-    }
 
-    @Override
-    public ApiResult<?> delete(Long id, User user) {
-        return null;
+
+
+
+    private Debtor getDebtorByIdElseThrow(Long id){
+        return debtorRepository.findById(id).orElseThrow(() -> new RestException("DEBTOR NOT FOUND",HttpStatus.NOT_FOUND));
     }
 }

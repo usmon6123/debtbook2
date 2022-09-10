@@ -9,10 +9,11 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @AllArgsConstructor@NoArgsConstructor@Data
 public class DebtorResDto {
-
+    private Long id;
     private String name;
 
     private String phoneNumber;
@@ -23,6 +24,8 @@ public class DebtorResDto {
     @Column(columnDefinition = "text")
     private String description;
 
-    private BigDecimal Allsum;
+    private BigDecimal allSum;
+
+    private Timestamp date;//qarz olgan yoki bergan vaqti
 
 }

@@ -41,14 +41,14 @@ public class DebtorController {
     //BU YO'LGA ASOSAN ADMIN KIRIB QO'L OSTIDAGILARNING RO'LE VA PERMISSIONLARINI O'ZGARTIRISHI MUMKIN
     @CheckPermission(values = {"EDIT"})
     @PutMapping("/edit/{id}")
-    ApiResult<?> edit(@PathVariable Long id, @RequestBody DebtorDto debtorDto, @CurrentUser User user) {
-        return debtorService.edit(id, debtorDto, user);
+    ApiResult<?> edit(@PathVariable Long id, @RequestBody DebtorDto debtorDto) {
+        return debtorService.edit(id, debtorDto);
     }
 
     @CheckPermission(values = "DELETE")
     @DeleteMapping("/delete/{id}")
-    ApiResult<?> delete(@PathVariable Long id, @CurrentUser User user) {
-        return debtorService.delete(id, user);
+    ApiResult<?> delete(@PathVariable Long id) {
+        return debtorService.delete(id);
     }
 
 

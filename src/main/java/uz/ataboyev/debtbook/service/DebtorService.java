@@ -15,7 +15,7 @@ public interface DebtorService {
 
     ApiResult<?> getAll();
 
-    ApiResult<?> edit(Long id, DebtorDto debtorDto, User user);
+    ApiResult<?> edit(Long id, DebtorDto debtorDto);
 
-    ApiResult<?> delete(Long id, User user);
+    ApiResult<?> delete(Long id);
 }
