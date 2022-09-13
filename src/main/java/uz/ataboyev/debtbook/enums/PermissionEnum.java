@@ -25,8 +25,8 @@ public enum PermissionEnum {
     EDIT_USER_ROLE("f",""),
     EDIT_USER("foydalanuvchi ozining accauntini sozlashi",""),
 
-    ADD_DEBTOR("","");
-
+    ADD_DEBTOR("",""),
+    ADD_DEBT_LIST("","");
 
 
     private String name;

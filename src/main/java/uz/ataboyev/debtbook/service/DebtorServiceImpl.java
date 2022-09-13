@@ -16,6 +16,7 @@ import uz.ataboyev.debtbook.repository.UserRepository;
 import uz.ataboyev.debtbook.service.base.BaseService;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,7 @@ public class DebtorServiceImpl implements DebtorService{
 
     private final DebtorRepository debtorRepository;
     private final DebtorMapper debtorMapper;
+    private final BaseService baseService;
 
     @Override
     public ApiResult<?> add(DebtorDto debtorDto) {
@@ -39,13 +41,19 @@ public class DebtorServiceImpl implements DebtorService{
         Debtor debtor = debtorMapper.dtoToDebtor(debtorDto);
         debtorRepository.save(debtor);
 
-        return ApiResult.successResponse(debtor,"SAVED DEBTOR");
+        BigDecimal debts = baseService.getDebtsForCurrentDebtor(debtor.getId());
+        DebtorResDto debtorResDto = debtorMapper.debtorToResDto(debtor);
+        debtorResDto.setAllSum(debts);
+
+
+        return ApiResult.successResponse(debtorResDto,"SAVED DEBTOR");
     }
 
     @Override
     public ApiResult<?> edit(Long id, DebtorDto debtorDto) {
+
         //ID BO'YICHA QARZDOR BAZADAN OLIB KELINADI
-        Debtor debtor = getDebtorByIdElseThrow(id);
+        Debtor debtor = baseService.getDebtorByIdElseThrow(id);
 
         //QARZDOR PARAMETRLARI DTODAGI MA'LUMOTLAR ORQALI O'ZGARTIRILADI
         debtorMapper.updateDebtor(debtor,debtorDto);
@@ -64,10 +72,8 @@ public class DebtorServiceImpl implements DebtorService{
         //debtorni umumiy qarzini olib kelish kerak
 
         DebtorResDto debtorResDto = debtorMapper.debtorToResDto(debtor);
-
-
-
-        return null;
+        debtorResDto.setAllSum(baseService.getDebtsForCurrentDebtor(id));
+        return ApiResult.successResponse(debtorResDto);
     }
 
     @Override
@@ -77,9 +83,4 @@ public class DebtorServiceImpl implements DebtorService{
 
 
 
-
-
-    private Debtor getDebtorByIdElseThrow(Long id){
-        return debtorRepository.findById(id).orElseThrow(() -> new RestException("DEBTOR NOT FOUND",HttpStatus.NOT_FOUND));
-    }
 }

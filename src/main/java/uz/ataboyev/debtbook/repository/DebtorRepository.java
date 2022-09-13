@@ -16,4 +16,7 @@ public interface DebtorRepository extends JpaRepository<Debtor, Long> {
 
    boolean existsByName(String name);
    boolean existsByPhoneNumberOrName(String phoneNumber, String name);
+
+
+
 }

@@ -5,11 +5,9 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import uz.ataboyev.debtbook.entity.template.AbsLongEntity;
 import uz.ataboyev.debtbook.enums.DebtorStatus;
+import uz.ataboyev.debtbook.enums.PayTypeEnum;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
@@ -28,6 +26,10 @@ public class DebtList extends AbsLongEntity {
 
     @Column(columnDefinition = "text")
     private String description;
+
+
+    @Enumerated(EnumType.STRING)
+    private PayTypeEnum debtStatus;
 
     //TRUE -> QARZDOR QARZ OLSA, FALSE -> QARZDOR QARZINI TO'LAMOQCHI BO'LSA
     private boolean inOrOut = false;

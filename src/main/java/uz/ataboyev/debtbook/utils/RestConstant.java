@@ -10,6 +10,7 @@ public interface RestConstant {
     String ROLE_CONTROLLER = BASE_PATH + "/role";
     String PERMISSION_CONTROLLER = BASE_PATH + "/permission";
     String DEBTOR_CONTROLLER = BASE_PATH + "/debtor";
+    String DEBT_LIST_CONTROLLER = BASE_PATH + "/debt-list";
 
 
 

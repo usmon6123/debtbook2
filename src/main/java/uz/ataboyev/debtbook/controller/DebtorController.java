@@ -21,11 +21,12 @@ public class DebtorController {
     @CheckPermission(values = "ADD_DEBTOR")
     @PostMapping("/add")
     ApiResult<?> add(@RequestBody DebtorDto debtorDto) {
+
         return debtorService.add(debtorDto);
     }
 
     @CheckPermission(values = {"GET"})
-    @GetMapping("/get-one")
+    @GetMapping("/get-one/{id}")
     ApiResult<DebtorResDto> getOne(@PathVariable Long id) {
 
         return debtorService.getOne(id);
