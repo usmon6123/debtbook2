@@ -6,10 +6,13 @@ import uz.ataboyev.debtbook.aop.annotation.CheckPermission;
 import uz.ataboyev.debtbook.entity.User;
 import uz.ataboyev.debtbook.payload.ApiResult;
 import uz.ataboyev.debtbook.payload.DebtorDto;
+import uz.ataboyev.debtbook.payload.DebtorHistoryResDto;
 import uz.ataboyev.debtbook.payload.DebtorResDto;
 import uz.ataboyev.debtbook.security.CurrentUser;
 import uz.ataboyev.debtbook.service.DebtorService;
 import uz.ataboyev.debtbook.utils.RestConstant;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(RestConstant.DEBTOR_CONTROLLER)
@@ -17,6 +20,7 @@ import uz.ataboyev.debtbook.utils.RestConstant;
 public class DebtorController {
 
     private final DebtorService debtorService;
+
 
     @CheckPermission(values = "ADD_DEBTOR")
     @PostMapping("/add")
@@ -28,8 +32,13 @@ public class DebtorController {
     @CheckPermission(values = {"GET"})
     @GetMapping("/get-one/{id}")
     ApiResult<DebtorResDto> getOne(@PathVariable Long id) {
-
         return debtorService.getOne(id);
+    }
+
+    @CheckPermission(values = {"GET"})
+    @GetMapping("/get-one-history/{id}")
+    ApiResult<List<DebtorHistoryResDto>> getOneHistory(@PathVariable Long id) {
+        return debtorService.getOneHistory(id);
     }
 
     @CheckPermission(values = "GET")

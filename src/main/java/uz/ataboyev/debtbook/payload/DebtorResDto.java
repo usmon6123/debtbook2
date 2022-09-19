@@ -24,8 +24,8 @@ public class DebtorResDto {
     @Column(columnDefinition = "text")
     private String description;
 
-    private BigDecimal allSum;
+    private BigDecimal debtSums;
 
-    private Timestamp date;//qarz olgan yoki bergan vaqti
+//    private Timestamp date;//qarz olgan yoki bergan vaqti
 
 }

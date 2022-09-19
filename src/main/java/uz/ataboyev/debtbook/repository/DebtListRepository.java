@@ -17,5 +17,9 @@ public interface DebtListRepository extends JpaRepository<DebtList, Long> {
     @Query(value = "select * from debt_list where :myQuery",nativeQuery = true)
     List<DebtList>getFilterSearchSortDebtList(@Param("myQuery")String myQuery);
 
+    @Query(value = "",countQuery = "")
+    List<DebtList> findAllByDebtorId(Long debtor_id);
+
+
 
 }

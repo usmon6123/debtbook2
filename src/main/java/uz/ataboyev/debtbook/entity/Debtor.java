@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -27,4 +28,6 @@ public class Debtor extends AbsLongEntity {
 
     @Column(columnDefinition = "text")
     private String description;
+
+    private BigDecimal debtSums;
 }

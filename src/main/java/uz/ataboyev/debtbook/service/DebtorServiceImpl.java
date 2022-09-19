@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uz.ataboyev.debtbook.entity.*;
 import uz.ataboyev.debtbook.enums.PermissionEnum;
 import uz.ataboyev.debtbook.exception.RestException;
+import uz.ataboyev.debtbook.mapper.DebtListMapper;
 import uz.ataboyev.debtbook.mapper.DebtorMapper;
 import uz.ataboyev.debtbook.payload.*;
 import uz.ataboyev.debtbook.repository.DebtorRepository;
@@ -30,6 +31,7 @@ public class DebtorServiceImpl implements DebtorService{
     private final DebtorRepository debtorRepository;
     private final DebtorMapper debtorMapper;
     private final BaseService baseService;
+    private final DebtListMapper debtListMapper;
 
     @Override
     public ApiResult<?> add(DebtorDto debtorDto) {
@@ -43,7 +45,7 @@ public class DebtorServiceImpl implements DebtorService{
 
         BigDecimal debts = baseService.getDebtsForCurrentDebtor(debtor.getId());
         DebtorResDto debtorResDto = debtorMapper.debtorToResDto(debtor);
-        debtorResDto.setAllSum(debts);
+        debtorResDto.setDebtSums(debts);
 
 
         return ApiResult.successResponse(debtorResDto,"SAVED DEBTOR");
@@ -67,12 +69,21 @@ public class DebtorServiceImpl implements DebtorService{
     }
 
     @Override
+    public ApiResult<List<DebtorHistoryResDto>> getOneHistory(Long id) {
+
+        //QARZDORNING IDSI ORQALI UMUMIY OLDI BERDILAR ROYHATINI OLIB KELADI
+        List<DebtList> listDebtsForDebtorById = baseService.getListDebtsForDebtorById(id);
+        List<DebtorHistoryResDto> debtorHistoryResDtos = debtListMapper.debtListsToHistoryResDto(listDebtsForDebtorById);
+        return ApiResult.successResponse(debtorHistoryResDtos);
+    }
+
+    @Override
     public ApiResult<DebtorResDto> getOne(Long id) {
         Debtor debtor = debtorRepository.findById(id).orElseThrow(() -> new RestException("Bu qarzdor topilmadi", HttpStatus.NOT_FOUND));
         //debtorni umumiy qarzini olib kelish kerak
 
         DebtorResDto debtorResDto = debtorMapper.debtorToResDto(debtor);
-        debtorResDto.setAllSum(baseService.getDebtsForCurrentDebtor(id));
+
         return ApiResult.successResponse(debtorResDto);
     }
 

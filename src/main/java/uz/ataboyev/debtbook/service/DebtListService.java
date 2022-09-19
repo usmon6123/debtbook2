@@ -8,4 +8,7 @@ import uz.ataboyev.debtbook.payload.DebtListResDto;
 public interface DebtListService {
     ApiResult<DebtListResDto> add(DebtListReqDto debtListReqDto, User user);
 
+    ApiResult<?> edit(Long id, DebtListReqDto debtListReqDto, User user);
+
+    ApiResult<?> getOne(Long id);
 }

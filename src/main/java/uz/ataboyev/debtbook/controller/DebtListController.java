@@ -23,16 +23,22 @@ public class DebtListController {
         return debtListService.add(debtListReqDto,user);
     }
 
-
-
-
-
+    @CheckPermission(values = "EDIT")
+    @PutMapping("/edit")
+    ApiResult<?>edit(@RequestBody DebtListReqDto debtListReqDto, Long id, @CurrentUser User user){
+        return debtListService.edit(id,debtListReqDto,user);
+    }
 
     @CheckPermission(values = {"GET"})
-    @GetMapping("/get-one")
+    @GetMapping("/get-one/{id}")
     ApiResult<?> getOne(@PathVariable Long id) {
-
-        return null;
+        return debtListService.getOne(id);
     }
+    @CheckPermission(values = {"GET"})
+    @GetMapping("/get-debtor/{id}")
+    ApiResult<?> getDebtorHistory(@PathVariable Long id) {
+        return debtListService.getOne(id);
+    }
+
 
 }

@@ -5,10 +5,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import uz.ataboyev.debtbook.entity.DebtList;
 import uz.ataboyev.debtbook.entity.Debtor;
-import uz.ataboyev.debtbook.payload.DebtListReqDto;
-import uz.ataboyev.debtbook.payload.DebtListResDto;
-import uz.ataboyev.debtbook.payload.DebtorDto;
-import uz.ataboyev.debtbook.payload.DebtorResDto;
+import uz.ataboyev.debtbook.payload.*;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface DebtListMapper {
@@ -21,4 +20,6 @@ public interface DebtListMapper {
     DebtList dtoToDebtList(DebtListReqDto debtListReqDto);
 
     DebtListResDto debtListToResDto(DebtList debtList);
+
+    List<DebtorHistoryResDto> debtListsToHistoryResDto(List<DebtList> debtLists);
 }

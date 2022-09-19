@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service;
 import uz.ataboyev.debtbook.entity.User;
 import uz.ataboyev.debtbook.payload.ApiResult;
 import uz.ataboyev.debtbook.payload.DebtorDto;
+import uz.ataboyev.debtbook.payload.DebtorHistoryResDto;
 import uz.ataboyev.debtbook.payload.DebtorResDto;
+
+import java.util.List;
 
 @Service
 public interface DebtorService {
@@ -18,4 +21,7 @@ public interface DebtorService {
     ApiResult<?> edit(Long id, DebtorDto debtorDto);
 
     ApiResult<?> delete(Long id);
+
+    ApiResult<List<DebtorHistoryResDto>> getOneHistory(Long id);
+
 }

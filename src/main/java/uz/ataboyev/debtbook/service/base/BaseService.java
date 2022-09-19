@@ -3,6 +3,7 @@ package uz.ataboyev.debtbook.service.base;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import uz.ataboyev.debtbook.entity.DebtList;
 import uz.ataboyev.debtbook.entity.Debtor;
 import uz.ataboyev.debtbook.entity.Permission;
 import uz.ataboyev.debtbook.enums.PermissionEnum;
@@ -11,6 +12,7 @@ import uz.ataboyev.debtbook.repository.*;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -55,5 +57,10 @@ public class BaseService {
     //QARZDORNING UMUMIY QARZDORLIK SUMMASINI YIG'IB OLIB KELADI
     public BigDecimal getDebtsForCurrentDebtor(Long debtorId){
         return debtListRepository.getSumDebtsForDebtor(debtorId);
+    }
+
+    //QARZDORNING IDSI ORQALI UMUMIY OLDI BERDILAR ROYHATINI OLIB KELADI
+    public List<DebtList> getListDebtsForDebtorById(Long debtorId){
+        return debtListRepository.findAllByDebtorId(debtorId);
     }
 }
