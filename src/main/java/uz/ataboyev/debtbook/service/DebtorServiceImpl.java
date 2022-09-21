@@ -2,11 +2,16 @@ package uz.ataboyev.debtbook.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.ataboyev.debtbook.entity.*;
 import uz.ataboyev.debtbook.enums.PermissionEnum;
 import uz.ataboyev.debtbook.exception.RestException;
+import uz.ataboyev.debtbook.mapper.CustomMapper;
 import uz.ataboyev.debtbook.mapper.DebtListMapper;
 import uz.ataboyev.debtbook.mapper.DebtorMapper;
 import uz.ataboyev.debtbook.payload.*;
@@ -26,7 +31,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class DebtorServiceImpl implements DebtorService{
+public class DebtorServiceImpl implements DebtorService {
 
     private final DebtorRepository debtorRepository;
     private final DebtorMapper debtorMapper;
@@ -38,7 +43,8 @@ public class DebtorServiceImpl implements DebtorService{
 
         //BAZADA BOR YO'QLIGINI TEKSHIRISH QARZDORNING, BOR BO'LSA THROW
         boolean existsByPhoneNumberOrName = debtorRepository.existsByPhoneNumberOrName(debtorDto.getPhoneNumber(), debtorDto.getName());
-        if (existsByPhoneNumberOrName)throw new RestException("Ismi yoki Telefon raqam bazada mavjud",HttpStatus.CONFLICT);
+        if (existsByPhoneNumberOrName)
+            throw new RestException("Ismi yoki Telefon raqam bazada mavjud", HttpStatus.CONFLICT);
 
         Debtor debtor = debtorMapper.dtoToDebtor(debtorDto);
         debtorRepository.save(debtor);
@@ -48,7 +54,7 @@ public class DebtorServiceImpl implements DebtorService{
         debtorResDto.setDebtSums(debts);
 
 
-        return ApiResult.successResponse(debtorResDto,"SAVED DEBTOR");
+        return ApiResult.successResponse(debtorResDto, "SAVED DEBTOR");
     }
 
     @Override
@@ -58,14 +64,11 @@ public class DebtorServiceImpl implements DebtorService{
         Debtor debtor = baseService.getDebtorByIdElseThrow(id);
 
         //QARZDOR PARAMETRLARI DTODAGI MA'LUMOTLAR ORQALI O'ZGARTIRILADI
-        debtorMapper.updateDebtor(debtor,debtorDto);
+        debtorMapper.updateDebtor(debtor, debtorDto);
+
+        debtorRepository.save(debtor);
 
         return ApiResult.successResponse("SUCCESS EDITED DEBTOR");
-    }
-
-    @Override
-    public ApiResult<?> delete(Long id) {
-        return null;
     }
 
     @Override
@@ -74,6 +77,7 @@ public class DebtorServiceImpl implements DebtorService{
         //QARZDORNING IDSI ORQALI UMUMIY OLDI BERDILAR ROYHATINI OLIB KELADI
         List<DebtList> listDebtsForDebtorById = baseService.getListDebtsForDebtorById(id);
         List<DebtorHistoryResDto> debtorHistoryResDtos = debtListMapper.debtListsToHistoryResDto(listDebtsForDebtorById);
+
         return ApiResult.successResponse(debtorHistoryResDtos);
     }
 
@@ -88,10 +92,29 @@ public class DebtorServiceImpl implements DebtorService{
     }
 
     @Override
-    public ApiResult<?> getAll() {
-        return null;
+    public ApiResult<CustomPage<DebtorResDto>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Debtor> debtorPage = debtorRepository.findAll(pageable);
+        CustomPage<DebtorResDto> customPage = debtorResDtoCustomPage(debtorPage);
+        return ApiResult.successResponse(customPage);
     }
 
+    @Override
+    public ApiResult<?> delete(Long id) {
+        Debtor debtor = baseService.getDebtorByIdElseThrow(id);
+        if (debtor.getDebtSums() == null || debtor.getDebtSums().intValue() == 0)
+            debtorRepository.delete(debtor);
+        return ApiResult.successResponse("SUCCESS DELETED");
+    }
 
-
+    public CustomPage<DebtorResDto> debtorResDtoCustomPage(Page<Debtor> debtorPage) {
+        return new CustomPage<>(
+                debtorPage.getContent().stream().map(CustomMapper::debtorToResDto).collect(Collectors.toList()),
+                debtorPage.getTotalPages(),
+                debtorPage.getNumber(),
+                debtorPage.getTotalElements(),
+                debtorPage.getSize(),
+                debtorPage.getNumberOfElements()
+        );
+    }
 }

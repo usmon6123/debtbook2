@@ -34,10 +34,12 @@ public class DebtListController {
     ApiResult<?> getOne(@PathVariable Long id) {
         return debtListService.getOne(id);
     }
-    @CheckPermission(values = {"GET"})
-    @GetMapping("/get-debtor/{id}")
+
+    @CheckPermission(values = {"DELETE"})
+    @GetMapping("/DELETEr/{id}")
     ApiResult<?> getDebtorHistory(@PathVariable Long id) {
-        return debtListService.getOne(id);
+
+        return debtListService.delete(id);
     }
 
 

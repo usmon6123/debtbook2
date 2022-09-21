@@ -89,4 +89,18 @@ public class DebtListServiceImpl implements DebtListService {
         DebtListResDto debtListResDto = debtListMapper.debtListToResDto(debtList);
         return ApiResult.successResponse(debtListResDto);
     }
+
+    @Override
+    public ApiResult<?> delete(Long id) {
+
+        DebtList debtList = debtListRepository.findById(id).orElseThrow(() -> RestException.restThrow("DEBTLIST NOT FOUND", HttpStatus.NOT_FOUND));
+        Debtor debtor = debtList.getDebtor();
+        debtListRepository.delete(debtList);
+        BigDecimal debts = baseService.getDebtsForCurrentDebtor(debtor.getId());
+        debtor.setDebtSums(debts);
+        debtorRepository.save(debtor);
+        return ApiResult.successResponse("SUCCESS DELETED");
+    }
+
+
 }

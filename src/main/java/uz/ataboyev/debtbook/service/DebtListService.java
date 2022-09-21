@@ -11,4 +11,6 @@ public interface DebtListService {
     ApiResult<?> edit(Long id, DebtListReqDto debtListReqDto, User user);
 
     ApiResult<?> getOne(Long id);
+
+    ApiResult<?> delete(Long id);
 }

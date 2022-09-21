@@ -4,22 +4,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.ataboyev.debtbook.aop.annotation.CheckPermission;
 import uz.ataboyev.debtbook.entity.User;
-import uz.ataboyev.debtbook.payload.ApiResult;
-import uz.ataboyev.debtbook.payload.DebtorDto;
-import uz.ataboyev.debtbook.payload.DebtorHistoryResDto;
-import uz.ataboyev.debtbook.payload.DebtorResDto;
+import uz.ataboyev.debtbook.payload.*;
 import uz.ataboyev.debtbook.security.CurrentUser;
 import uz.ataboyev.debtbook.service.DebtorService;
 import uz.ataboyev.debtbook.utils.RestConstant;
 
 import java.util.List;
 
+import static uz.ataboyev.debtbook.utils.AppConstant.DEFAULT_PAGE_NUMBER;
+import static uz.ataboyev.debtbook.utils.AppConstant.DEFAULT_PAGE_SIZE;
+
 @RestController
 @RequestMapping(RestConstant.DEBTOR_CONTROLLER)
 @RequiredArgsConstructor
 public class DebtorController {
 
-    private final DebtorService debtorService;
+   private final DebtorService debtorService;
 
 
     @CheckPermission(values = "ADD_DEBTOR")
@@ -43,9 +43,10 @@ public class DebtorController {
 
     @CheckPermission(values = "GET")
     @GetMapping("/get-all")
-    ApiResult<?> getAll() {
+    ApiResult<CustomPage<DebtorResDto>> getAll(@RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                               @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
 
-        return debtorService.getAll();
+        return debtorService.getAll(page,size);
     }
 
     //BU YO'LGA ASOSAN ADMIN KIRIB QO'L OSTIDAGILARNING RO'LE VA PERMISSIONLARINI O'ZGARTIRISHI MUMKIN
